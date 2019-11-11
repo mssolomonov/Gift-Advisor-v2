@@ -2,7 +2,7 @@
 Gift generator
 
 * To start development you should install postgreSQL, pgAdmin
-* Or create in sever user with credentials from  `application.properties`
-* Or change locally credentials in `application.properties`
+* Or create user in postgreSQL server with credentials from  `application.properties`
+* Or change locally password in `application.properties` according the password of your 'postgres' user
 * Restore database from SiteOfGifts.Backup
 * Frontend application in gift-advisor folder
