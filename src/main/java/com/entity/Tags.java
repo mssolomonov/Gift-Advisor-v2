@@ -1,6 +1,8 @@
 package com.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Tags")
@@ -12,6 +14,9 @@ public class Tags {
 
     @Column
     private String name;
+
+    @ManyToMany(mappedBy = "tags")
+    Set<Gifts> gifts = new HashSet<>();
 
     public Long getId() {
         return id;

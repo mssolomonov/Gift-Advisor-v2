@@ -1,6 +1,6 @@
 package com.service;
 
-import com.entity.Users;
+import com.entity.User;
 import com.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +17,19 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public void createUsers(Users users) {
-        usersRepository.save(users);
+    public void createUsers(User user) {
+        usersRepository.save(user);
     }
 
-    public List<Users> findAll(){
+    public List<User> findAll(){
         return usersRepository.findAll();
     }
 
-    public Users findById(Long userId){
+    public User findById(Long userId){
         return usersRepository.findById(userId).orElse(null);
     }
 
-    public List<Users> findAllByName(String name){
-        return usersRepository.findAllByName(name);
+    public User findByName(String name){
+        return usersRepository.findByUsername(name);
     }
 }

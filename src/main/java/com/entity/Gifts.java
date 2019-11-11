@@ -1,6 +1,8 @@
 package com.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Gifts")
@@ -16,11 +18,19 @@ public class Gifts {
     @Column
     private String description;
 
-    @Column
-    private Long id_user;
+    @ManyToOne
+    @JoinColumn(name="id_user")
+    private User id_user;
 
     @Column
     private String image_url;
+
+    @ManyToMany
+    @JoinTable(
+            name = "GiftAndTags",
+            joinColumns = @JoinColumn(name = "gift_id"),
+            inverseJoinColumns = @JoinColumn(name = "tags_id"))
+    Set<Tags> tags = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -46,11 +56,11 @@ public class Gifts {
         this.description = description;
     }
 
-    public Long getId_user() {
+    public User getId_user() {
         return id_user;
     }
 
-    public void setId_user(Long id_user) {
+    public void setId_user(User id_user) {
         this.id_user = id_user;
     }
 
