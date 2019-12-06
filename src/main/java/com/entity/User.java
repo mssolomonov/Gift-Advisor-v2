@@ -1,15 +1,17 @@
 package com.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "usertable")
-public class User {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,9 @@ public class User {
     @Column(name = "hash")
     private String password;
 
-    @OneToMany(mappedBy = "id_user", cascade = CascadeType.ALL)
+//    @JsonManagedReference
+    @OneToMany(mappedBy = "id_user")
+    @JsonIgnore
     private Set<Gifts> gifts = new HashSet<>();
 
     public Set<Gifts> getGifts() {
@@ -63,5 +67,14 @@ public class User {
                 ", username='" + username + '\'' +
                 ", hash=" + password +
                 '}';
+    }
+
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User() {
     }
 }

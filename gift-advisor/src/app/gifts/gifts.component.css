@@ -1,0 +1,37 @@
+.icon-50 {
+  display: flex;
+  height: 50px;
+  width: 50px;
+}
+
+.chip-input {
+  width: 100%;
+}
+
+.tags {
+  flex-grow: 1;
+}
+
+.tags-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.app-class .mat-list-item {
+  height: auto;
+}
+
+.icon-60{
+  display: flex;
+  height: 50px;
+  width: 50px;
+}
+.mat-list-item {
+  /*display: inline-flex;*/
+  align-items: center;
+  height: 100vh;
+  float: right;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}

@@ -1,12 +1,20 @@
 package com.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Gifts")
-public class Gifts {
+@Table(name = "gifts")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
+public class Gifts implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +26,7 @@ public class Gifts {
     @Column
     private String description;
 
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="id_user")
     private User id_user;
@@ -25,12 +34,37 @@ public class Gifts {
     @Column
     private String image_url;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
-            name = "GiftAndTags",
-            joinColumns = @JoinColumn(name = "gift_id"),
-            inverseJoinColumns = @JoinColumn(name = "tags_id"))
+            name = "gifts_tags",
+            joinColumns = @JoinColumn(name = "id_gift"),
+            inverseJoinColumns = @JoinColumn(name = "id_tag"))
+    private
     Set<Tags> tags = new HashSet<>();
+
+    @Column
+    private Integer price;
+
+
+    public Gifts() {
+    }
+
+    public Gifts(String name, String description, User id_user, String image_url, Set<Tags> tags, Integer price) {
+        this.name = name;
+        this.description = description;
+        this.id_user = id_user;
+        this.image_url = image_url;
+        this.tags = tags;
+        this.price = price;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
@@ -70,6 +104,14 @@ public class Gifts {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public Set<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tags> tags) {
+        this.tags = tags;
     }
 
     @Override

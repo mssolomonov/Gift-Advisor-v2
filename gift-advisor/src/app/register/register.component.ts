@@ -23,10 +23,9 @@ export class RegisterComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
   ) {
-    // redirect to home if already logged in
-    // if (this.authenticationService.currentUserValue) {
-    //   this.router.navigate(['/gifts']);
-    // }
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/gifts'],{ queryParams: { id: 0 }});
+    }
   }
 
   ngOnInit() {
@@ -64,6 +63,7 @@ export class RegisterComponent implements OnInit {
           this.errMsg = "User with this username already exists, please choose another username";
           this.loading=false
         });
+    this.router.navigate(['/login']);
   }
 
   onLogin() {
