@@ -1,0 +1,112 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Gift</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="giftForm">
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field class="name" [formGroup]="giftForm">
+              <input matInput [readonly]="!this.isEditable && !isNewGift" [size]="256" placeholder="Name" formControlName="name" name="name" required>
+              <mat-hint  *ngIf="isEditable || isNewGift">Required, maximum - 256 characters</mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="price" [formGroup]="giftForm">
+              <input matInput [readonly]="!this.isEditable && !isNewGift"  type="number" pattern="[1-9]{1}[0-9]{0,6}" placeholder="Price" formControlName="price"
+                     name="price" required>
+              <span matSuffix>$</span>
+              <mat-hint  *ngIf="isEditable || isNewGift">Required, 1-1 000 000</mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label  *ngIf="isEditable || isNewGift" class="image-upload-container btn btn-bwm">
+              <span>Select Image</span>
+              <input  #imageInput
+                     type="file"
+                     accept="image/*"
+                     (change)="processFile(imageInput)">
+            </label>
+            <div class="img-preview" *ngIf="image">
+              <img src="{{decodeImage}}" height="200">
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field  *ngIf="description || isEditable || isNewGift" class="description" [formGroup]="giftForm">
+            <textarea  matInput cdkTextareaAutosize
+                      placeholder="Description" formControlName="description" name="Description"
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="10">
+            </textarea>
+              <mat-hint  *ngIf="isEditable || isNewGift">Maximum - 1024 characters</mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field  *ngIf="isEditable || tags.length>0 || isNewGift" class="tags">
+              <mat-chip-list #chipList aria-label="Tags selection">
+                <mat-chip
+                  *ngFor="let tag of tagToString()"
+                  [selectable]="false"
+                  [removable]="true"
+                  (removed)="remove(tag)">
+                  {{tag}}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  placeholder="Tags"
+                  #tagInput
+                  [formControl]="tagsControl"
+                  [matAutocomplete]="auto"
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="true"
+                  (matChipInputTokenEnd)="add($event)">
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                  {{tag}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <mat-error *ngIf="errMsg">
+            {{ errMsg }}
+          </mat-error>
+        </tr>
+        <tr>
+          <td>
+            {{message}}
+          </td>
+        </tr>
+        <!--        <tr>-->
+        <!--          <td><mat-form-field class="message"  [formGroup]="giftForm">-->
+        <!--            <input matInput [ placeholder="Description" formControlName="description"  name="Description" required>-->
+        <!--          </mat-form-field></td>-->
+        <!--        </tr>-->
+      </table>
+
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button *ngIf="isNewGift" [disabled]="!giftForm.valid" (click)="onSubmit()" color="primary">Add
+    </button>
+    <button mat-raised-button *ngIf="isEditable && !isNewGift" [disabled]="!giftForm.valid" (click)="onUpdate()"
+            color="primary">Update
+    </button>
+    <button mat-raised-button *ngIf="isEditable && !isNewGift" (click)="onDelete()" color="primary">Delete</button>
+    <button mat-raised-button *ngIf="isEditable || isNewGift" (click)="onReset()" color="primary">Reset</button>
+    <button mat-raised-button (click)="onCancel()" color="primary">Return</button>
+  </mat-card-actions>
+</mat-card>
