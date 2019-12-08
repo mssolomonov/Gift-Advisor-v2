@@ -9,8 +9,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usertable")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class User implements Serializable {
 
     @Id
@@ -23,7 +21,6 @@ public class User implements Serializable {
     @Column(name = "hash")
     private String password;
 
-//    @JsonManagedReference
     @OneToMany(mappedBy = "id_user")
     @JsonIgnore
     private Set<Gifts> gifts = new HashSet<>();

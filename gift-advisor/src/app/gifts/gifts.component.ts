@@ -19,6 +19,7 @@ import {UserService} from "../_services/user.service";
 import {GiftsService} from "../_services/gifts.service";
 import {AuthenticationService} from "../_services/authentification.service";
 import {Gift} from "../_model/gift";
+import {Options} from "ng5-slider";
 
 @Component({
   selector: 'app-gifts',
@@ -39,7 +40,18 @@ export class GiftsComponent implements OnInit {
   @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
   private gifts: Gift[];
-
+  value = 1;
+  highValue = 1000000;
+  options: Options = {
+    floor: 0,
+    ceil: 1000000,
+    selectionBarGradient: {
+      from: 'darkslateblue',
+      to: 'darkslateblue'
+    }
+  };
+  err = '';
+  sort = 'no';
   constructor(private iconRegistry: MatIconRegistry,
               private sanitizer: DomSanitizer,
               private tagService: TagsService,
@@ -139,15 +151,23 @@ export class GiftsComponent implements OnInit {
   }
 
   onSubmitTags(){
+    if (!this.value && !this.highValue){
+      this.err = "Problem with price range";
+      return
+    }
+    if (this.value>this.highValue){
+      this.err = "Max vaule must be less than min value";
+      return
+    }
     if (this.isMyGift) {
-      this.giftService.getGifts(this.tagToString(),  this.user.username).subscribe(
+      this.giftService.getGifts(this.tagToString(),  this.user.username, this.value, this.highValue, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(0,5); this.allLenght = resp.length
         },
         err => console.error(err),
       );
     }else{
-      this.giftService.getGifts(this.tagToString(), '').subscribe(
+      this.giftService.getGifts(this.tagToString(), '',  this.value, this.highValue, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(0,5); this.allLenght = resp.length
         },
@@ -157,13 +177,17 @@ export class GiftsComponent implements OnInit {
   }
 
   onSubmit(e: any) {
+    if (this.value>this.highValue){
+      this.err = "Max vaule must be less than min value";
+      return
+    }
     if (this.isMyGift){
-      this.giftService.getGifts(this.tagToString(), this.user.username).subscribe(
+      this.giftService.getGifts(this.tagToString(), this.user.username,  this.value, this.highValue, this.sort).subscribe(
         resp =>{this.gifts = resp.slice(e.pageSize*e.pageIndex,e.pageSize*(e.pageIndex+1))},
         err => console.error(err),
       );
     } else {
-      this.giftService.getGifts(this.tagToString(), '').subscribe(
+      this.giftService.getGifts(this.tagToString(), '',  this.value, this.highValue, this.sort).subscribe(
         resp => {this.gifts = resp.slice(e.pageSize*e.pageIndex,e.pageSize*(e.pageIndex+1))},
         err => console.error(err),
       );

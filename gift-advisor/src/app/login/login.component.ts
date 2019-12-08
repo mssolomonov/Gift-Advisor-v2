@@ -61,4 +61,7 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
+  onGifts() {
+    this.router.navigate(['/gifts']);
+  }
 }

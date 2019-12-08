@@ -12,9 +12,13 @@
   flex-grow: 1;
 }
 
-.tags-container {
+.flex-row {
   display: flex;
   flex-direction: row;
+}
+
+.space-between {
+  justify-content: space-between;
 }
 
 .app-class .mat-list-item {
@@ -35,3 +39,12 @@
   flex-wrap: nowrap;
   overflow-x: auto;
 }
+
+.mat-list-base .mat-list-item.mat-3-line {
+  height:100px;
+}
+
+::ng-deep .custom-slider .ng5-slider .ng5-slider-pointer {
+     background-color: darkslateblue;
+  }
+

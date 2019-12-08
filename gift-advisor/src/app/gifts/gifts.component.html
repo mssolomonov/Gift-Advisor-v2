@@ -2,7 +2,7 @@
   <mat-grid-tile
     [colspan]="1"
     [rowspan]="1">
-    <button mat-flat-button (click) = onClick()>
+    <button mat-flat-button (click)=onClick()>
       <mat-icon class="icon-50" svgIcon="gift" aria-hidden="false">
       </mat-icon>
     </button>
@@ -10,7 +10,7 @@
   <mat-grid-tile
     [colspan]="2"
     [rowspan]="1"
-  class="tags-container">
+    class="flex-row">
     <mat-form-field class="tags">
       <mat-chip-list #chipList aria-label="Tags selection">
         <mat-chip
@@ -41,10 +41,10 @@
     <button mat-raised-button (click)="onSubmitTags()" color="primary">Search</button>
   </mat-grid-tile>
   <mat-grid-tile
-                 [colspan]="1"
-                 [rowspan]="1">
+    [colspan]="1"
+    [rowspan]="1">
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile-menu">
-      <mat-icon  class="icon-60" svgIcon="profile" aria-hidden="false">
+      <mat-icon class="icon-60" svgIcon="profile" aria-hidden="false">
       </mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -64,24 +64,52 @@
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="4"
-    [rowspan]="2">
-    <mat-paginator [length]="allLenght"
-                   [pageSize]="5"
-                    (page)="pageEvent = onSubmit($event)">
-    </mat-paginator>
+    [rowspan]="1">
+    <div class="custom-slider">
+      <div class="flex-row space-between">
+        <input matInput placeholder="Min Value" type="text" pattern="[1-5]{1}[0-9]{0,5}" [(ngModel)]="value"
+        name="value">
+        <input matInput placeholder="Max Value" type="text" pattern="[6-9]{1}[0-9]{0,5}" [(ngModel)]="highValue"
+        name="highValue" style="text-align: end;">
+      </div>
+      <ng5-slider [(value)]="value" [(highValue)]="highValue" [options]="options">Price:</ng5-slider>
+    </div>
+    {{this.err}}
+    <div>
+      <button mat-button [matMenuTriggerFor]="sorting">Sort: {{sort}}</button>
+      <mat-menu #sorting="matMenu">
+        <button mat-menu-item (click)="sort='alpha'">Alphabetically</button>
+        <button mat-menu-item (click)="sort='asc'">Price ascending</button>
+        <button mat-menu-item (click)="sort='desc'">Price descending</button>
+        <button mat-menu-item (click)="sort='popular'">Popularity</button>
+        <button mat-menu-item (click)="sort='no'">No</button>
+      </mat-menu>
+    </div>
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="4"
-    [rowspan]="5">
-    <div *ngIf="pageEvent || gifts.length>0">
-      <mat-nav-list >
-        <mat-list-item  class="list" routerLink="/gift" [queryParams]="{ id: gift.id }" *ngFor="let gift of gifts">
-          <a matLine >
+    [rowspan]="1">
+    <mat-paginator [length]="allLenght"
+                   [pageSize]="5"
+                   (page)="pageEvent = onSubmit($event)">
+    </mat-paginator>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="1"
+    [rowspan]="6">
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="2"
+    [rowspan]="6">
+    <div class="flex-grow" *ngIf="pageEvent || gifts.length>0">
+      <mat-nav-list>
+        <mat-list-item class="list" routerLink="/gift" [queryParams]="{ id: gift.id }" *ngFor="let gift of gifts">
+          <a matLine>
             <h3 class="link-caption">{{ gift.name }}</h3>
           </a>
-          <h5  mat-line>  {{gift.description}}</h5>
-          <h5  mat-line>  {{gift.price}}$</h5>
-          <img *ngIf="gift.image_url.trim()" src="http://localhost:8080/{{gift.image_url.trim()}}" height="70" >
+          <h5 mat-line>  {{gift.description}}</h5>
+          <h5 mat-line>  {{gift.price}}$</h5>
+          <img *ngIf="gift.image_url.trim()" src="http://localhost:8080/{{gift.image_url.trim()}}" height="70">
         </mat-list-item>
       </mat-nav-list>
     </div>

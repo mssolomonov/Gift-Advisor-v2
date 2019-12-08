@@ -10,6 +10,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ErrorInterceptor} from "./_helper/error";
 import { GiftComponent } from './gifts/gift.component';
 import {CustomMaterialModule} from "./core/material.module";
+import { Ng5SliderModule } from 'ng5-slider';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
   MatAutocompleteModule, MatButtonModule,
@@ -33,6 +34,7 @@ import {CustomPaginator} from "./_helper/matpaginator";
     GiftsComponent,
   ],
   imports: [
+    Ng5SliderModule,
     MatIconModule,
     MatButtonModule,
     HttpClientModule,

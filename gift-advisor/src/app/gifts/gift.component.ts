@@ -15,6 +15,7 @@ import {SuccessDialog} from "../dialogs/success.dialog";
 import {Image} from "../_model/image";
 import {ImageService} from "../_services/image.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {PopularityService} from "../_services/popularity.service";
 
 @Component({
   selector: 'app-gift',
@@ -55,6 +56,7 @@ export class GiftComponent implements OnInit {
                public dialog: MatDialog,
                private imageService: ImageService,
                private sanitizer: DomSanitizer,
+               private popularityService: PopularityService,
 
   ) {
     this.giftForm = this.formBuilder.group({
@@ -74,19 +76,15 @@ export class GiftComponent implements OnInit {
       });
     this.activatedRoute.queryParams.subscribe(params => {
       this.giftId = parseInt(params['id']);
+      if (this.giftId != 0){
+        popularityService.saveCount(this.giftId).subscribe()
+      }
     });
   }
 
   ngOnInit() {
 
     if (this.giftId === 0) {
-      // this.giftForm = this.formBuilder.group({
-      //   name: '',
-      //   description: '',
-      //   image: '',
-      //   price: 0,
-      //   message: '',
-      // });
       this.user = new User(this.giftId,
         this.authenticationService.currentUserValue.username,
         this.authenticationService.currentUserValue.password);
@@ -290,5 +288,10 @@ export class GiftComponent implements OnInit {
     reader.addEventListener('load', (event: any) => {
       this.decodeImage=event.target.result;
     });
+  }
+
+  onDeleteImage() {
+    this.image = '';
+    this.decodeImage='';
   }
 }

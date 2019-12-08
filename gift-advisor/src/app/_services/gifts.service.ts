@@ -32,12 +32,15 @@ export class GiftsService {
     return this.http.get<Gift[]>(`http://localhost:8080/gifts/${username}`);
   }
 
-  getGifts(tags: string[], username: string){
+  getGifts(tags: string[], username: string, from, to: number, sort: string){
 
     return this.http.get<Gift[]>(`http://localhost:8080/gift/search`, {
       params: {
         'tags': tags,
         'username': username,
+        'from': from.toString(),
+        'to': to.toString(),
+        'sort': sort,
       }});
   }
 

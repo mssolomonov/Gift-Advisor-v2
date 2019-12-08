@@ -3,6 +3,7 @@ package com.service;
 import com.entity.Gifts;
 import com.repository.GiftsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public class GiftsService {
 
     public List<Gifts> findAll(){
         return giftsRepository.findAll();
+    }
+
+    public List<Gifts> findAll(Sort sort){
+        return giftsRepository.findAll(sort);
     }
 
     public Gifts findById(Long id){

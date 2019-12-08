@@ -1,9 +1,6 @@
 package com.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,8 +9,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "gifts")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class Gifts implements Serializable {
 
     @Id
@@ -26,7 +21,6 @@ public class Gifts implements Serializable {
     @Column
     private String description;
 
-//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="id_user")
     private User id_user;
@@ -34,28 +28,31 @@ public class Gifts implements Serializable {
     @Column
     private String image_url;
 
+    @OneToOne(mappedBy = "gifts")
+    @JsonBackReference
+    private Popularity popularity;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "gifts_tags",
             joinColumns = @JoinColumn(name = "id_gift"),
             inverseJoinColumns = @JoinColumn(name = "id_tag"))
-    private
-    Set<Tags> tags = new HashSet<>();
+    private Set<Tags> tags = new HashSet<>();
 
     @Column
     private Integer price;
 
-
     public Gifts() {
     }
 
-    public Gifts(String name, String description, User id_user, String image_url, Set<Tags> tags, Integer price) {
+    public Gifts(String name, String description, User id_user, String image_url, Set<Tags> tags, Integer price, Popularity popularity) {
         this.name = name;
         this.description = description;
         this.id_user = id_user;
         this.image_url = image_url;
         this.tags = tags;
         this.price = price;
+        this.popularity = popularity;
     }
 
     public Integer getPrice() {
@@ -112,6 +109,14 @@ public class Gifts implements Serializable {
 
     public void setTags(Set<Tags> tags) {
         this.tags = tags;
+    }
+
+    public Popularity getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(Popularity popularity) {
+        this.popularity = popularity;
     }
 
     @Override
