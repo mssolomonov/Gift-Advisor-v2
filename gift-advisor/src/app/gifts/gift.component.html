@@ -33,7 +33,7 @@
                      (change)="processFile(imageInput)">
             </label>
             <div class="remove-image">
-              <button mat-raised-button (click)="onDeleteImage()" color="primary">Delete image</button>
+              <button mat-raised-button  *ngIf="isEditable || isNewGift" (click)="onDeleteImage()" color="primary">Delete image</button>
             </div>
             <div class="img-preview" *ngIf="image">
               <img src="{{decodeImage}}" height="200">
