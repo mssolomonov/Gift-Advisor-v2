@@ -1,1 +1,90 @@
-<p>gifts works!</p>
+<mat-grid-list cols="4" rowHeight="100px">
+  <mat-grid-tile
+    [colspan]="1"
+    [rowspan]="1">
+    <button mat-flat-button (click) = onClick()>
+      <mat-icon class="icon-50" svgIcon="gift" aria-hidden="false">
+      </mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="2"
+    [rowspan]="1"
+  class="tags-container">
+    <mat-form-field class="tags">
+      <mat-chip-list #chipList aria-label="Tags selection">
+        <mat-chip
+          *ngFor="let tag of tagToString()"
+          [selectable]="false"
+          [removable]="true"
+          (removed)="remove(tag)">
+          {{tag}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          class="chip-input"
+          placeholder="Tags"
+          #tagInput
+          [formControl]="tagsControl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+          {{tag}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button mat-raised-button (click)="onSubmitTags()" color="primary">Search</button>
+  </mat-grid-tile>
+  <mat-grid-tile
+                 [colspan]="1"
+                 [rowspan]="1">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile-menu">
+      <mat-icon  class="icon-60" svgIcon="profile" aria-hidden="false">
+      </mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button *ngIf="user" mat-menu-item (click)="onMyGifts()">
+        <span>My gifts</span>
+      </button>
+      <button *ngIf="user" mat-menu-item (click)="onAddGift()">
+        <span>Add new gift</span>
+      </button>
+      <button *ngIf="user" mat-menu-item (click)="onLogout()">
+        <span>Logout</span>
+      </button>
+      <button *ngIf="!user" mat-menu-item (click)="onLogin()">
+        <span>Login</span>
+      </button>
+    </mat-menu>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="4"
+    [rowspan]="2">
+    <mat-paginator [length]="allLenght"
+                   [pageSize]="5"
+                    (page)="pageEvent = onSubmit($event)">
+    </mat-paginator>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="4"
+    [rowspan]="5">
+    <div *ngIf="pageEvent || gifts.length>0">
+      <mat-nav-list >
+        <mat-list-item  class="list" routerLink="/gift" [queryParams]="{ id: gift.id }" *ngFor="let gift of gifts">
+          <a matLine >
+            <h3 class="link-caption">{{ gift.name }}</h3>
+          </a>
+          <h5  mat-line>  {{gift.description}}</h5>
+          <h5  mat-line>  {{gift.price}}$</h5>
+          <img *ngIf="gift.image_url.trim()" src="http://localhost:8080/{{gift.image_url.trim()}}" height="70" >
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+  </mat-grid-tile>
+
+</mat-grid-list>

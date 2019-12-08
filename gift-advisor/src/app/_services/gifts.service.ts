@@ -1,9 +1,47 @@
 import { Injectable } from '@angular/core';
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {User} from "../_model/user";
+import {Gift} from "../_model/gift";
+import {Observable} from "rxjs";
+import {Tag} from "../_model/tag";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GiftsService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
+  get(id: number){
+    return this.http.get<Gift>(`http://localhost:8080/gift/${id}`);
+  }
+
+  add(gift: Gift){
+    return this.http.post(`http://localhost:8080/gift/add`, gift);
+  }
+
+  update(gift: Gift){
+    return this.http.put(`http://localhost:8080/gift/update`, gift);
+  }
+
+  delete(id: number){
+    return this.http.delete(`http://localhost:8080/gift/${id}`);
+  }
+
+  getUserGift(username: string) {
+    return this.http.get<Gift[]>(`http://localhost:8080/gifts/${username}`);
+  }
+
+  getGifts(tags: string[], username: string){
+
+    return this.http.get<Gift[]>(`http://localhost:8080/gift/search`, {
+      params: {
+        'tags': tags,
+        'username': username,
+      }});
+  }
+
+  getAll() {
+    return this.http.get<Gift[]>(`http://localhost:8080/gifts`);
+  }
 }

@@ -29,7 +29,12 @@ public class GiftsService {
         return giftsRepository.findById(id).orElse(null);
     }
 
-    public List<Gifts> findAllByName(String name){
-        return giftsRepository.findAllByName(name);
+    public List<Gifts> findAllByUsername(String name){
+        return giftsRepository.findAllByUsername(name);
     }
+
+    public void deleteGift(Long id){
+        giftsRepository.deleteById(id);
+    }
+
 }

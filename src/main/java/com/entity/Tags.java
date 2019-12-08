@@ -1,12 +1,15 @@
 package com.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Tags")
-public class Tags {
+@Table(name = "tags")
+public class Tags implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +18,7 @@ public class Tags {
     @Column
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     Set<Gifts> gifts = new HashSet<>();
 
@@ -40,5 +44,12 @@ public class Tags {
                 "id=" + id +
                 ", name=" + name +
                 '}';
+    }
+
+    public Tags(String name) {
+        this.name = name;
+    }
+
+    public Tags() {
     }
 }

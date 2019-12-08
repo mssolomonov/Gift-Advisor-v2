@@ -8,30 +8,53 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { RegisterComponent } from './register/register.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ErrorInterceptor} from "./_helper/error";
-import { GiftsComponent } from './gifts/gifts.component';
+import { GiftComponent } from './gifts/gift.component';
 import {CustomMaterialModule} from "./core/material.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {
+  MatAutocompleteModule, MatButtonModule,
+  MatChipsModule,
+  MatFormFieldModule,
+  MatGridListModule, MatIconModule,
+  MatInputModule, MatListModule, MatPaginatorIntl, MatPaginatorModule
+} from "@angular/material";
+import {SuccessDialog} from "./dialogs/success.dialog";
+import { GiftsComponent } from './gifts/gifts.component';
+import {CustomPaginator} from "./_helper/matpaginator";
 
 @NgModule({
+  exports: [MatIconModule, MatButtonModule], // and the exports
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    GiftsComponent
+    GiftComponent,
+    SuccessDialog,
+    GiftsComponent,
   ],
   imports: [
+    MatIconModule,
+    MatButtonModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     CustomMaterialModule,
-    FormsModule
+    FormsModule,
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatGridListModule,
+    MatPaginatorModule,
+    MatListModule,
   ],
   providers: [ { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-    // provider used to create fake backend
+    { provide: MatPaginatorIntl,
+      useClass: CustomPaginator}
   ],
+  entryComponents: [SuccessDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

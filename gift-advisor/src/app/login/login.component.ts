@@ -21,9 +21,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
   ) {
-    // if (this.authenticationService.currentUserValue) {
-    //   this.router.navigate(['/gifts']);
-    // }
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/gifts']);
+    }
   }
 
   ngOnInit() {
@@ -49,10 +49,10 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl]);
+          this.router.navigate([this.returnUrl],{ queryParams: { id: 0 }});
         },
         error => {
-          this.errMsg = error.toString();
+          this.errMsg = "Could not login";
           this.loading = false;
         });
   }
@@ -60,4 +60,5 @@ export class LoginComponent implements OnInit {
   onRegister() {
     this.router.navigate(['/register']);
   }
+
 }
