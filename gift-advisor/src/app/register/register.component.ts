@@ -49,6 +49,7 @@ export class RegisterComponent implements OnInit {
     }
     // stop here if form is invalid
     if (this.registerForm.invalid) {
+      this.errMsg="Invalid form, username size 1-64 character, password 1-64 character";
       return;
     }
 

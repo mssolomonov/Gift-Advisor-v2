@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl],{ queryParams: { id: 0 }});
         },
         error => {
-          this.errMsg = "Could not login";
+          this.errMsg = "Could not login because of  wrong credentials";
           this.loading = false;
         });
   }

@@ -39,7 +39,7 @@ export class GiftComponent implements OnInit {
   tagsControl = new FormControl();
   errMsg = '';
   defaultGift: Gift;
-  price=0;
+  price=1;
   decodeImage: SafeUrl;
   file: File;
   defaultDecodeImage: SafeUrl;
@@ -63,7 +63,7 @@ export class GiftComponent implements OnInit {
       name: '',
       description: '',
       image: '',
-      price: 0,
+      price: 1,
       message: '',
     });
     this.tagService.getList().subscribe(
@@ -83,7 +83,9 @@ export class GiftComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if (!this.authenticationService.currentUserValue && this.giftId === 0) {
+      return this.router.navigate(["/gifts"])
+    }
     if (this.giftId === 0) {
       this.user = new User(this.giftId,
         this.authenticationService.currentUserValue.username,
@@ -103,7 +105,8 @@ export class GiftComponent implements OnInit {
             this.image = gift.image_url.trim();
             this.user = new User(gift.id, gift.id_user.username.trim(),gift.id_user.password.trim());
             this.tags = [];
-            gift.tags.forEach(tags => this.tags.push(tags));
+            gift.tags.forEach(tags => {this.tags.push(new Tag(tags.id, tags.name.trim()))});
+            gift.tags.forEach(tags => tags.name = tags.name.trim());
             this.defaultGift = Object.assign({}, gift);
           this.price = gift.price;
           this.giftForm = this.formBuilder.group({
@@ -145,11 +148,11 @@ export class GiftComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
-      const value = event.value;
+      const value = event.value.trim();
 
-      if ((value || '').trim()) {
-        let tags1 = this.allTags.find((tag: Tag) => tag.name===value);
-        this.tags.push(tags1);
+      if ((value || '')) {
+        let tags1 = this.allTags.find((tag: Tag) => tag.name.trim()===value);
+        this.tags.push(new Tag(tags1.id, tags1.name.trim()));
       }
 
       if (input) {
@@ -161,16 +164,18 @@ export class GiftComponent implements OnInit {
   }
 
   remove(tagValue: string): void {
-    let index = this.tags.findIndex(tag => tag.name==tagValue);
+    let index = this.tags.findIndex(tag => tag.name.trim()==tagValue.trim());
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    let tags1 = this.allTags.find(tag => tag.name===event.option.viewValue)
-    let find = this.tags.find(tag => tag === tags1);
+    let tags1 = this.allTags.find(tag => tag.name===event.option.viewValue.trim());
+    let find = this.tags.find(tag => tag.id === tags1.id && tag.name === tags1.name);
     if (find){
+      this.tagInput.nativeElement.value = '';
+      this.tagsControl.setValue(null);
       return
     }
     this.tags.push(tags1);
@@ -181,6 +186,7 @@ export class GiftComponent implements OnInit {
   onSubmit() {
       this.errMsg="";
       if (this.giftForm.invalid || this.tagsControl.invalid){
+        this.errMsg="Invalid input, maximum length of username - 256, description -1024, price is between 1 and 99_999_999";
         return
       }
       let value = this.setNewValue();
@@ -191,6 +197,7 @@ export class GiftComponent implements OnInit {
 
       let gift = new Gift(this.giftId, this.name, this.description, this.user, this.image, this.tags, this.price);
       this.defaultGift = Object.assign({}, gift);
+      this.defaultDecodeImage = this.decodeImage;
       this.giftService.add(gift).pipe().subscribe(
         resp =>this.message ="Success!",
         error =>this.errMsg="Couldn't add gift: " + error.toString(),
@@ -210,6 +217,7 @@ export class GiftComponent implements OnInit {
     }
     let gift = new Gift(this.giftId, this.name, this.description, this.user, this.image, this.tags, this.price);
     this.defaultGift =Object.assign({}, gift);
+    this.defaultDecodeImage = this.decodeImage;
     this.giftService.update(gift).pipe().subscribe(
       resp => this.message ="Success!",
       error =>this.errMsg="Couldn't update gift: " + error.toString(),
@@ -229,7 +237,7 @@ export class GiftComponent implements OnInit {
 
 
   tagToString(){
-    return this.tags ? this.tags.map((tag : Tag | null) => tag ? tag.name : '') : []
+    return this.tags ? this.tags.map((tag : Tag | null) => tag ? tag.name.trim() : '') : []
   }
 
   onCancel() {
@@ -245,15 +253,13 @@ export class GiftComponent implements OnInit {
       price: this.defaultGift.price,
       message: '',
     });
-    for (let tag in this.tags){
-      this.tagsControl.setValue(null)
-    }
     // this.tagsControl.reset();
     this.name = this.defaultGift.name;
     this.price = this.defaultGift.price;
     this.description = this.defaultGift.description;
     this.image = this.defaultGift.image_url.trim();
-    this.tags = this.defaultGift.tags;
+    this.tags = [];
+    this.defaultGift.tags.forEach(tags => this.tags.push(tags));
     this.decodeImage = this.defaultDecodeImage;
   }
 
@@ -268,12 +274,6 @@ export class GiftComponent implements OnInit {
       return "OK"
     }
   }
-
-  // private processImageFromDatabase(image: string){
-  //   const reader = new FileReader();
-  //   new Blob(reader.readAsText(image))
-  //   reader.readAsDataURL(image);
-  // }
 
   async saveImage(){
      let data = await this.imageService.saveImage(this.file,  this.image).toPromise();

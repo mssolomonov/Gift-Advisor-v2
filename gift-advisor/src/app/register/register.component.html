@@ -8,16 +8,22 @@
         <tr>
           <td>
             <mat-form-field class="example-full-width" [formGroup]="registerForm">
-              <input matInput placeholder="Username" formControlName="username" name="username" required>
+              <input matInput placeholder="Username"  maxlength="64"  formControlName="username" name="username" required>
               <mat-hint>Required</mat-hint>
             </mat-form-field>
+            <div *ngIf="registerForm.controls.username.errors?.maxlength">
+              Name must be less than 64 characters long.
+            </div>
           </td>
         </tr>
         <tr>
           <td><mat-form-field class="example-full-width"  [formGroup]="registerForm">
-            <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
+            <input matInput placeholder="Password" maxlength="64" formControlName="password" type="password" name="password" required>
             <mat-hint>Required, minimum length - 6 </mat-hint>
           </mat-form-field></td>
+          <div *ngIf="registerForm.controls.password.errors?.maxlength">
+             Password must be less than 64 characters long.
+          </div>
         </tr>
         <tr>
           <td><mat-form-field class="example-full-width"  [formGroup]="registerForm">

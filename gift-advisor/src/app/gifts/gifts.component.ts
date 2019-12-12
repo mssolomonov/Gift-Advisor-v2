@@ -85,8 +85,8 @@ export class GiftsComponent implements OnInit {
       const value = event.value;
 
       if ((value || '').trim()) {
-        let tags1 = this.allTags.find((tag: Tag) => tag.name===value);
-        this.tags.push(tags1);
+        let tags1 = this.allTags.find((tag: Tag) => tag.name.trim()===value.trim());
+        this.tags.push(new Tag(tags1.id, tags1.name.trim()));
       }
 
       if (input) {
@@ -98,7 +98,7 @@ export class GiftsComponent implements OnInit {
   }
 
   remove(tagValue: string): void {
-    let index = this.tags.findIndex(tag => tag.name==tagValue);
+    let index = this.tags.findIndex(tag => tag.name.trim()==tagValue.trim());
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
@@ -117,7 +117,7 @@ export class GiftsComponent implements OnInit {
     this.tagsControl.setValue(null);
   }
   tagToString(){
-    return this.tags ? this.tags.map((tag : Tag | null) => tag ? tag.name : '') : []
+    return this.tags ? this.tags.map((tag : Tag | null) => tag ? tag.name.trim() : '') : []
   }
 
   private _filter(value: string): string[] {
@@ -136,7 +136,7 @@ export class GiftsComponent implements OnInit {
   onMyGifts() {
     this.isMyGift = true;
     this.giftService.getUserGift(this.user.username).subscribe(
-      resp => {this.gifts = resp.slice(0,5); this.allLenght=this.gifts.length},
+      resp => {this.gifts = resp.slice(0,5); this.allLenght=resp.length},
       err => console.error(err),
     );
   }
