@@ -22,7 +22,7 @@ public class UserController {
     public ResponseEntity<?> registration(@RequestBody User user) {
         User  user1 = userService.findByName(user.getUsername());
         if (user1 != null){
-            return new ResponseEntity<>("\"User already exists\"", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("\"User already exists\"", HttpStatus.BAD_REQUEST);
         }
         Base64.Encoder encoder = Base64.getEncoder();
         user.setPassword(new String(encoder.encode(user.getPassword().getBytes())));

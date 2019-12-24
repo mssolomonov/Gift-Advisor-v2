@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, MaxLengthValidator, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../_services/authentification.service";
 import {UserService} from "../_services/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {User} from "../_model/user";
+import {GiftsService} from "../_services/gifts.service";
 
 @Component({
   selector: 'app-register',
@@ -22,7 +24,9 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
+    private giftService: GiftsService,
   ) {
+    this.giftService.getAll().subscribe(resp=>console.log("ok"),err => this.router.navigate(["/error"]));
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/gifts'],{ queryParams: { id: 0 }});
     }
@@ -30,9 +34,9 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      repeatPassword: ['', Validators.required]
+      username: ['', Validators.required, Validators.maxLength(64)],
+      password: ['', [Validators.required, Validators.minLength(8)], Validators.maxLength(64)],
+      repeatPassword: ['', Validators.required,  Validators.minLength(8), Validators.maxLength(64)]
     });
   }
 
@@ -58,13 +62,15 @@ export class RegisterComponent implements OnInit {
       .subscribe(resp => {
               this.errMsg = "";
               this.msg = "Success";
+              this.router.navigate(['/gifts']);
         },
 
         err => {
           this.errMsg = "User with this username already exists, please choose another username";
           this.loading=false
         });
-    this.router.navigate(['/login']);
+
+
   }
 
   onLogin() {

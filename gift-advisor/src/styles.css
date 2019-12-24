@@ -6,4 +6,10 @@
   flex-grow: 1;
 }
 
+.align-start {
+  align-items: start;
+}
 
+.full-height {
+  height: 100%;
+}

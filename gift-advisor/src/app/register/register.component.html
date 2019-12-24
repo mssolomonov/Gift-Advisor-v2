@@ -18,17 +18,20 @@
         </tr>
         <tr>
           <td><mat-form-field class="example-full-width"  [formGroup]="registerForm">
-            <input matInput placeholder="Password" maxlength="64" formControlName="password" type="password" name="password" required>
-            <mat-hint>Required, minimum length - 6 </mat-hint>
+            <input matInput placeholder="Password" minLength="8" maxlength="64" formControlName="password" type="password" name="password" required>
+            <mat-hint>Required, minimum length - 8 </mat-hint>
           </mat-form-field></td>
-          <div *ngIf="registerForm.controls.password.errors?.maxlength">
-             Password must be less than 64 characters long.
-          </div>
+          <mat-error *ngIf="registerForm.controls.password.errors?.maxlength || registerForm.controls.password.errors?.minlength">
+             Password must be less than 64 and more than 8 characters long.
+          </mat-error>
         </tr>
         <tr>
           <td><mat-form-field class="example-full-width"  [formGroup]="registerForm">
-            <input matInput placeholder="Repeat Password" formControlName="repeatPassword" type="password" name="repeat password" required>
+            <input matInput placeholder="Repeat Password" minLength="8" maxlength="64" formControlName="repeatPassword" type="password" name="repeatPassword" required>
           </mat-form-field></td>
+          <mat-error *ngIf="registerForm.controls.repeatPassword.errors?.maxlength || registerForm.controls.repeatPassword.errors?.minlength">
+            Password must be less than 64 and more than 8 characters long.
+          </mat-error>
         </tr>
       </table>
       <mat-error *ngIf="errMsg">

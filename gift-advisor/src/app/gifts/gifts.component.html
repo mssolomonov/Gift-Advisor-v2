@@ -2,10 +2,22 @@
   <mat-grid-tile
     [colspan]="1"
     [rowspan]="1">
-    <button mat-flat-button (click)=onClick()>
-      <mat-icon class="icon-50" svgIcon="gift" aria-hidden="false">
-      </mat-icon>
+    <button mat-button [matMenuTriggerFor]="menu" color="primary" aria-label="profile-menu"> Menu
     </button>
+    <mat-menu #menu="matMenu">
+      <button *ngIf="user" mat-menu-item (click)="onMyGifts()">
+        <span>My gifts</span>
+      </button>
+      <button *ngIf="user" mat-menu-item (click)="onAddGift()">
+        <span>Add new gift</span>
+      </button>
+      <button *ngIf="user" mat-menu-item (click)="onLogout()">
+        <span>Logout</span>
+      </button>
+      <button *ngIf="!user" mat-menu-item (click)="onLogin()">
+        <span>Login</span>
+      </button>
+    </mat-menu>
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="2"
@@ -39,58 +51,49 @@
       </mat-autocomplete>
     </mat-form-field>
     <button mat-raised-button (click)="onSubmitTags()" color="primary">Search</button>
+    <button mat-raised-button (click)="onReset()" color="primary">Reset filters</button>
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="1"
     [rowspan]="1">
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile-menu">
-      <mat-icon class="icon-60" svgIcon="profile" aria-hidden="false">
+    <button mat-flat-button (click)=onClick()>
+      <mat-icon class="icon-50" svgIcon="gift" aria-hidden="false">
       </mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-      <button *ngIf="user" mat-menu-item (click)="onMyGifts()">
-        <span>My gifts</span>
-      </button>
-      <button *ngIf="user" mat-menu-item (click)="onAddGift()">
-        <span>Add new gift</span>
-      </button>
-      <button *ngIf="user" mat-menu-item (click)="onLogout()">
-        <span>Logout</span>
-      </button>
-      <button *ngIf="!user" mat-menu-item (click)="onLogin()">
-        <span>Login</span>
-      </button>
-    </mat-menu>
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="4"
-    [rowspan]="1">
+    [rowspan]="2">
     <div class="custom-slider">
-      <div class="flex-row space-between">
-        <input matInput placeholder="Min Value" type="text" pattern="[1-5]{1}[0-9]{0,5}" [(ngModel)]="value"
-        name="value">
-        <input matInput placeholder="Max Value" type="text" pattern="[6-9]{1}[0-9]{0,5}" [(ngModel)]="highValue"
-        name="highValue" style="text-align: end;">
-      </div>
-      <ng5-slider [(value)]="value" [(highValue)]="highValue" [options]="options">Price:</ng5-slider>
+      <form [formGroup]="rangeForm" class="flex-row space-between">
+        <mat-form-field class="margin-right-xs">
+          <input matInput placeholder="Min Value" class="lowInput" type="text" formControlName="value"
+                 name="value"  (input)="onChangeLow()">
+        </mat-form-field>
+        <mat-form-field class="margin-left-xs" style="text-align: end;">
+          <input matInput placeholder="Max Value" type="text" formControlName="highValue"
+                 name="highValue" (input)="onChangeHigh()">
+        </mat-form-field>
+      </form>
+      <ng5-slider [(value)]="lowPrice" [(highValue)]="highPrice" [options]="options" (userChange)="onChangeValue()">Price:</ng5-slider>
     </div>
-    {{this.err}}
+    <mat-error>{{err}}</mat-error>
     <div>
       <button mat-button [matMenuTriggerFor]="sorting">Sort: {{sort}}</button>
       <mat-menu #sorting="matMenu">
-        <button mat-menu-item (click)="sort='alpha'">Alphabetically</button>
-        <button mat-menu-item (click)="sort='asc'">Price ascending</button>
-        <button mat-menu-item (click)="sort='desc'">Price descending</button>
-        <button mat-menu-item (click)="sort='popular'">Popularity</button>
-        <button mat-menu-item (click)="sort='no'">No</button>
+        <button mat-menu-item (click)="sort='alpha'; onSubmitTags()">Alphabetically</button>
+        <button mat-menu-item (click)="sort='asc';  onSubmitTags()">Price ascending</button>
+        <button mat-menu-item (click)="sort='desc';  onSubmitTags()">Price descending</button>
+        <button mat-menu-item (click)="sort='popular';  onSubmitTags()">Popularity</button>
+        <button mat-menu-item (click)="sort='no';  onSubmitTags()">No</button>
       </mat-menu>
     </div>
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="4"
     [rowspan]="1">
-    <mat-paginator [length]="allLenght"
-                   [pageSize]="5"
+    <mat-paginator #paginator [length]="allLenght"
+                   [pageSize]="30"
                    (page)="pageEvent = onSubmit($event)">
     </mat-paginator>
   </mat-grid-tile>
@@ -100,8 +103,8 @@
   </mat-grid-tile>
   <mat-grid-tile
     [colspan]="2"
-    [rowspan]="6">
-    <div class="flex-grow" *ngIf="pageEvent || gifts.length>0">
+    [rowspan]="gifts.length * 8 / 5">
+    <div class="flex-grow align-start full-height " *ngIf="pageEvent || gifts.length>0">
       <mat-nav-list>
         <mat-list-item class="list" routerLink="/gift" [queryParams]="{ id: gift.id }" *ngFor="let gift of gifts">
           <a matLine>

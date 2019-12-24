@@ -4,6 +4,14 @@
   width: 50px;
 }
 
+.margin-left-xs {
+ margin-left: 0.5em;
+}
+
+.margin-right-xs {
+ margin-right: 0.5em;
+}
+
 .chip-input {
   width: 100%;
 }

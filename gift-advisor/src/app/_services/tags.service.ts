@@ -15,7 +15,7 @@ export class TagsService {
   getList() {
     return this.http.get<Tag[]>(`http://localhost:8080/tags`).pipe(
       map(tag =>  tag.map(tag => {
-        tag.name = tag.name.replace(/\s/g,'');
+        tag.name = tag.name.trim();
         return tag
       })));
   }

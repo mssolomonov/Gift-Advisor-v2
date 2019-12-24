@@ -83,16 +83,18 @@ public class GiftController {
     @RequestMapping(value="/gift/search", method = RequestMethod.GET)
     public ResponseEntity<?> getGiftByTags(@RequestParam(value="tags", required = false) String[] tags,
                                            @RequestParam("username") String username,
-                                           @RequestParam("from") Integer from,
-                                           @RequestParam("to") Integer to,
+                                           @RequestParam("from") String from,
+                                           @RequestParam("to") String to,
                                            @RequestParam("sort") String sort) {
 
+        Double fr = Double.valueOf(from);
+        Double t = Double.valueOf(to);
         List<Gifts> gifts = giftsService.findAll();
         if (!username.equals("")){
             gifts = gifts.stream().filter(gifts1 -> gifts1.getId_user().getUsername().trim().equals(username)).collect(Collectors.toList());
         }
         List<Gifts> concludeGift = new ArrayList<>(Collections.emptyList());
-        List<Gifts> giftsList = gifts.stream().filter(gifts1 -> gifts1.getPrice() < to && gifts1.getPrice() > from).collect(Collectors.toList());
+        List<Gifts> giftsList = gifts.stream().filter(gifts1 -> gifts1.getPrice() <= t && gifts1.getPrice() >= fr).collect(Collectors.toList());
         if (tags==null || tags.length==0){
             giftsList = sort(sort, giftsList);
             return new ResponseEntity<>(giftsList, HttpStatus.OK);

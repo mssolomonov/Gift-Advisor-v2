@@ -28,7 +28,7 @@ public class Gifts implements Serializable {
     @Column
     private String image_url;
 
-    @OneToOne(mappedBy = "gifts")
+    @OneToOne(mappedBy = "gifts", cascade = CascadeType.ALL)
     @JsonBackReference
     private Popularity popularity;
 
@@ -40,12 +40,12 @@ public class Gifts implements Serializable {
     private Set<Tags> tags = new HashSet<>();
 
     @Column
-    private Integer price;
+    private Double price;
 
     public Gifts() {
     }
 
-    public Gifts(String name, String description, User id_user, String image_url, Set<Tags> tags, Integer price, Popularity popularity) {
+    public Gifts(String name, String description, User id_user, String image_url, Set<Tags> tags, Double price, Popularity popularity) {
         this.name = name;
         this.description = description;
         this.id_user = id_user;
@@ -55,11 +55,11 @@ public class Gifts implements Serializable {
         this.popularity = popularity;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

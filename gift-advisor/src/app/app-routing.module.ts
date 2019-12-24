@@ -4,6 +4,7 @@ import {LoginComponent} from "./login/login.component";
 import {RegisterComponent} from "./register/register.component";
 import {GiftComponent} from "./gifts/gift.component";
 import {GiftsComponent} from "./gifts/gifts.component";
+import {ErrorComponent} from "./error/error.component";
 
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'gift', component: GiftComponent },
   { path: 'gifts', component: GiftsComponent },
+  { path: 'error', component: ErrorComponent },
   { path: '', redirectTo: '/gifts', pathMatch: 'full' },
   // { path: '**', redirectTo: 'gifts' }
 ];
