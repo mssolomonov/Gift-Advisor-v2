@@ -3,6 +3,7 @@ package com.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "popularity")
@@ -50,5 +51,19 @@ public class Popularity {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Popularity)) return false;
+        Popularity that = (Popularity) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(count, that.count);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, gifts, count);
     }
 }

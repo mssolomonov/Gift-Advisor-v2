@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -128,5 +129,24 @@ public class Gifts implements Serializable {
                 ", image_url='" + image_url + '\'' +
                 ", id_user=" + id_user +
                 '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Gifts)) return false;
+        Gifts gifts = (Gifts) o;
+        return Objects.equals(id, gifts.id) &&
+                Objects.equals(name, gifts.name) &&
+                Objects.equals(description, gifts.description) &&
+                Objects.equals(id_user, gifts.id_user) &&
+                Objects.equals(image_url, gifts.image_url) &&
+                Objects.equals(popularity, gifts.popularity) &&
+                Objects.equals(tags, gifts.tags) &&
+                Objects.equals(price, gifts.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, id_user, image_url, popularity, tags, price);
     }
 }

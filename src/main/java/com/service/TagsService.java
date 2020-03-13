@@ -10,7 +10,6 @@ import java.util.List;
 @Service
 public class TagsService {
 
-    @Autowired
     private final TagsRepository tagsRepository;
 
     public TagsService(TagsRepository tagsRepository){

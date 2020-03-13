@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PopularityService {
 
-    @Autowired
     private final PopularityRepository popularityRepository;
 
     public PopularityService(PopularityRepository popularityRepository) {

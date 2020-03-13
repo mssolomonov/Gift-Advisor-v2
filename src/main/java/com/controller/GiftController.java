@@ -32,8 +32,10 @@ public class GiftController {
     @Transactional
     @CrossOrigin(origins = "*")
     @RequestMapping(
-            value={"/gift/add", "/gift/update"}, method = {RequestMethod.POST,
-                                                                    RequestMethod.PUT})
+            value={"/gift/add", "/gift/update"}, method = {RequestMethod.POST, RequestMethod.PUT},
+            headers = {"Accept=application/json;charset=UTF-8", "Content-Type=application/json;charset=UTF-8"},
+            produces = "application/json;charset=utf-8")
+
     public ResponseEntity<?> addGift(@RequestBody Gifts gift) {
         User user = gift.getId_user();
         User user1 = userService.findByName(user.getUsername());

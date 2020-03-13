@@ -11,13 +11,13 @@ import java.util.List;
 @Service
 public class GiftsService {
 
-    @Autowired
     private final GiftsRepository giftsRepository;
 
     public GiftsService(GiftsRepository giftsRepository){
         this.giftsRepository = giftsRepository;
     }
 
+    //Add contructor to use mocks
     public void createGifts(Gifts gifts) {
         giftsRepository.save(gifts);
     }

@@ -20,10 +20,10 @@ public class ImageService {
             String path = "src"+ File.separator + "main" + File.separator+ "resources" + File.separator+ "static"
                     + File.separator+id.trim();
             Path filepath = Paths.get(path);
-             Files.deleteIfExists(filepath);
-             Files.createFile(filepath);
-                OutputStream outputStream = Files.newOutputStream(filepath);
-                outputStream.write(file.getBytes());
+            Files.deleteIfExists(filepath);
+            Files.createFile(filepath);
+            OutputStream outputStream = Files.newOutputStream(filepath);
+            outputStream.write(file.getBytes());
             path = "build"+File.separator+ "resources" +  File.separator + "main" + File.separator+ "static"
                     + File.separator+id.trim();
             filepath = Paths.get(path);

@@ -3,6 +3,7 @@ package com.controller;
 import com.entity.User;
 import com.service.UsersService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class UserController {
 
     @Transactional
     @CrossOrigin(origins = "*")
-    @RequestMapping(value="/user/log", method = RequestMethod.POST)
+    @RequestMapping(value="/user/log", method = RequestMethod.POST, produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> login(@RequestBody User user) {
         User  user1 = userService.findByName(user.getUsername());
         Base64.Decoder encoder = Base64.getDecoder();
