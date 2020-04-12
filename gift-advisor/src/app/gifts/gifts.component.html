@@ -75,7 +75,7 @@
                  name="highValue" (input)="onChangeHigh()">
         </mat-form-field>
       </form>
-      <ng5-slider [(value)]="lowPrice" [(highValue)]="highPrice" [options]="options" (userChange)="onChangeValue()">Price:</ng5-slider>
+      <ng5-slider [(value)]="_lowPrice" [(highValue)]="_highPrice" [options]="options" (userChange)="onChangeValue()">Price:</ng5-slider>
     </div>
     <mat-error>{{err}}</mat-error>
     <div>

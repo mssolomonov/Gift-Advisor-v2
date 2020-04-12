@@ -38,16 +38,6 @@ public class ImageControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         assertTrue(content.contains("You successfully uploaded filename.txt!"));
     }
-    @Test(expected = Exception.class)
-    public void saveImageFail() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart("/image")
-                .file(null)
-                .param("id", "1"))
-                .andExpect(status().isBadRequest()).andReturn();
-        String content = mvcResult.getResponse().getContentAsString();
-        assertTrue(content.contains("FAIL to upload filename.txt!"));
-    }
-
     @Test
     public void getImage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/image/{file}","filename.txt"))

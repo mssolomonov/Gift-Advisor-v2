@@ -23,8 +23,8 @@ public class ImageServiceTest {
 
     @Test(expected = RuntimeException.class)
     public void store() {
-        MockMultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some xml".getBytes());
-        imageService.store(file, "file");
+        MockMultipartFile file = new MockMultipartFile("file.txt", "filename.txt", "text/plain", "some xml".getBytes());
+        imageService.store(file, "file.txt");
         String path = "build"+ File.separator+ "resources" +  File.separator + "main" + File.separator+ "static"
                 + File.separator+"file";
         Path filepath = Paths.get(path);

@@ -64,25 +64,25 @@ jacocoTestReport {
 	}
 }
 
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			excludes = [
-					'com/entity/*',
-					'com/repository/*',
-			]
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.9
-			}
-			limit {
-				counter = 'BRANCH'
-				value = 'COVEREDRATIO'
-				minimum = 0.8
-			}
-		}
-	}
-}
-check.dependsOn jacocoTestCoverageVerification
+//jacocoTestCoverageVerification {
+//	violationRules {
+//		rule {
+//			excludes = [
+//					'com/entity/*',
+//					'com/repository/*',
+//			]
+//			limit {
+//				counter = 'LINE'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.9
+//			}
+//			limit {
+//				counter = 'BRANCH'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.8
+//			}
+//		}
+//	}
+//}
+//check.dependsOn jacocoTestCoverageVerification
 test.finalizedBy jacocoTestReport

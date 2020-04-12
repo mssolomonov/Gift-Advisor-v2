@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {LoginComponent} from "./login/login.component";
-import {RegisterComponent} from "./register/register.component";
 import {GiftComponent} from "./gifts/gift.component";
 import {GiftsComponent} from "./gifts/gifts.component";
 import {ErrorComponent} from "./error/error.component";
@@ -10,7 +9,6 @@ import {ErrorComponent} from "./error/error.component";
 const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
   { path: 'gift', component: GiftComponent },
   { path: 'gifts', component: GiftsComponent },
   { path: 'error', component: ErrorComponent },

@@ -9,6 +9,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,16 +29,11 @@ public class ImageController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/image", method = RequestMethod.POST)
-    public ResponseEntity<?> saveImage(@RequestBody MultipartFile file, @RequestParam("id") String id) {
+    public ResponseEntity<?> saveImage(@RequestBody @NonNull MultipartFile file, @RequestParam("id") String id) {
         String message = "";
-        try {
             imageService.store(file, id);
             message = "You successfully uploaded " + file.getOriginalFilename() + "!";
             return ResponseEntity.status(HttpStatus.OK).body(message);
-        } catch (Exception e) {
-            message = "FAIL to upload " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
     }
 
     @CrossOrigin(origins = "*")

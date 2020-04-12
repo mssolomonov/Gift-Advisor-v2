@@ -1,18 +1,17 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../_model/user";
-import {FormBuilder, FormControl, FormGroup, PatternValidator, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {GiftsService} from "../_services/gifts.service";
 import {AuthenticationService} from "../_services/authentification.service";
 import {Tag} from "../_model/tag";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog} from "@angular/material";
 import {map, startWith} from "rxjs/operators";
-import {Observable, Subject, throwError} from "rxjs";
+import {Observable} from "rxjs";
 import {TagsService} from "../_services/tags.service";
 import {Gift} from "../_model/gift";
 import {SuccessDialog} from "../dialogs/success.dialog";
-import {Image} from "../_model/image";
 import {ImageService} from "../_services/image.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {PopularityService} from "../_services/popularity.service";
@@ -48,7 +47,7 @@ export class GiftComponent implements OnInit {
   @ViewChild('imageInput', {static: false}) imageInput: ElementRef;
   message: string;
 
-  private tagsList$ = this.tagService.getList();
+  private tagsList$;
 
   constructor(private formBuilder: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -61,7 +60,11 @@ export class GiftComponent implements OnInit {
               private sanitizer: DomSanitizer,
               private popularityService: PopularityService,
   ) {
-    this.giftService.getAll().subscribe(resp=>console.log("ok"),err => this.router.navigate(["/error"]));
+    this.giftService.getAll().subscribe(resp=>console.log("ok"),
+        err => {
+      this.router.navigate(["/error"]);
+      return;
+    });
     this.giftForm = this.formBuilder.group({
       name: ['', [Validators.maxLength(64)]],
       description: ['', [Validators.maxLength(1024)]],
@@ -75,6 +78,7 @@ export class GiftComponent implements OnInit {
         popularityService.saveCount(this.giftId).subscribe()
       }
     });
+    this.tagsList$ = this.tagService.getList();
   }
 
   ngOnInit() {
@@ -149,9 +153,9 @@ export class GiftComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
-      const value = event.value.trim();
+      const value = event.value;
 
-      if ((value || '')) {
+      if ((value || '').trim()) {
         let tags1 = this.allTags.find((tag: Tag) => tag.name.trim() === value);
         this.tags.push(new Tag(tags1.id, tags1.name.trim()));
         this.allStringTags = this.allStringTags.filter(tag => tag.trim() !== value);
@@ -280,7 +284,7 @@ export class GiftComponent implements OnInit {
     this.description = this.giftForm.controls.description.value;
     let strPrice = this.giftForm.controls.price.value.toString();
     let totalPrice;
-    if (strPrice.indexOf(",") > 0 || strPrice.indexOf(".")) {
+    if (strPrice.indexOf(",") > 0 || strPrice.indexOf(".")>0) {
       totalPrice = Number.parseFloat(strPrice.replace(",", "."));
     } else {
       totalPrice = Number.parseInt(strPrice);
@@ -294,8 +298,7 @@ export class GiftComponent implements OnInit {
   }
 
   async saveImage() {
-    let data = await this.imageService.saveImage(this.file, this.image).toPromise();
-    return data
+    return await this.imageService.saveImage(this.file, this.image).toPromise()
   }
 
   processFile(imageInput: HTMLInputElement) {

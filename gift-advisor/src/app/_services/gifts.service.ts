@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {User} from "../_model/user";
+import {HttpClient} from "@angular/common/http";
 import {Gift} from "../_model/gift";
-import {Observable} from "rxjs";
-import {Tag} from "../_model/tag";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +42,6 @@ export class GiftsService {
   }
 
   getAll() {
-    return this.http.get<Gift[]>(`http://localhost:8080/gifts`);
+    return this.http.get(`http://localhost:8080/gifts`);
   }
 }

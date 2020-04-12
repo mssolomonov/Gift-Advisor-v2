@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Gift} from "../_model/gift";
 import {Tag} from "../_model/tag";
 import {map} from "rxjs/operators";
 

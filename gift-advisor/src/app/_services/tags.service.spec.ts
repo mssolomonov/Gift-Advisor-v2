@@ -1,12 +1,29 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TagsService } from './tags.service';
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('TagsService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: TagsService;
+  let httpMock: HttpTestingController;
+  beforeEach(() =>{
+    TestBed.configureTestingModule({
+      providers: [TagsService],
+      imports: [HttpClientTestingModule]
+    });
+    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.get(TagsService);
+  });
 
   it('should be created', () => {
-    const service: TagsService = TestBed.get(TagsService);
     expect(service).toBeTruthy();
+  });
+  it('getList() should return success', () => {
+    service.getList().subscribe(data => {
+      expect(data).toBe( [ ({ id: 1, name: 'tag',})]);
+    });
+
+    const req = httpMock.expectOne('http://localhost:8080/tags');
+    expect(req.request.method).toBe('GET');
   });
 });

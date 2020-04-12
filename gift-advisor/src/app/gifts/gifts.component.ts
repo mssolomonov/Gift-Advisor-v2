@@ -30,18 +30,18 @@ export class GiftsComponent implements OnInit {
   user: User;
   pageEvent: PageEvent;
   isMyGift = false;
-  private allTags: Tag[];
+  allTags: Tag[];
+  value = '0';
+  highValue = '99999999';
+  tagsControl = new FormControl();
+  tags = [];
   private allStringTags: string[];
   private filteredTags: Observable<string[]>;
-  private tagsControl = new FormControl();
-  private tags = [];
   private allLenght = 0;
-  private _value = 0.0;
-  private _highValue = 99999999.0;
-  private value = '0';
-  private  highValue = '99999999';
-  private lowPrice=0.0;
-  private highPrice=99999999.0;
+  private _valueNumber = 0.0;
+  private _highValueNumber = 99999999.0;
+  private _lowPrice=0.0;
+  private _highPrice= 99999999.0;
   @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
@@ -72,8 +72,9 @@ export class GiftsComponent implements OnInit {
     }
     this.giftService.getAll().subscribe(
       resp => {
-        this.gifts = resp.slice(0, 30);
-        this.allLenght = resp.length
+        let g =  resp as Gift[];
+        this.gifts = g.slice(0, 30);
+        this.allLenght = g.length
       },
       err =>this.router.navigate(["/error"]),
     );
@@ -96,20 +97,9 @@ export class GiftsComponent implements OnInit {
       highValue: ["99999999", [Validators.pattern(/^(?:0|(0[.,])[0-9]\d*|[1-9]\d{0,7}([.,]\d*)?)$/)]]
     });
 
-    this.rangeForm.get("value").valueChanges.subscribe((val)=>this._value = val);
-    this.rangeForm.get("highValue").valueChanges.subscribe((val)=>this._highValue = val);
+    this.rangeForm.get("value").valueChanges.subscribe((val)=>this._valueNumber = val);
+    this.rangeForm.get("highValue").valueChanges.subscribe((val)=>this._highValueNumber = val);
   }
-
-  // get highPrice(): number {
-  //   if (!this.rangeForm.get('highValue').valid) {
-  //     return 0;
-  //   }
-  //   if (this.highValue.indexOf(",") > 0 || this.highValue.indexOf(".")) {
-  //     return Number.parseFloat(this.rangeForm.get('highValue').value.replace(",", "."));
-  //   } else {
-  //     return Number.parseInt(this.rangeForm.get('highValue').value);
-  //   }
-  // }
 
   onChangeHigh(){
     this.err = "";
@@ -118,16 +108,16 @@ export class GiftsComponent implements OnInit {
       return 0;
     }
     if (!this.rangeForm.controls.highValue.value){
-      this.highPrice=99999999.0;
-      this._highValue = this.highPrice;
+      this._highPrice=99999999.0;
+      this._highValueNumber = this._highPrice;
       return
     }
-    if (this.rangeForm.controls.highValue.value.indexOf(",") > 0 ||this.rangeForm.controls.highValue.value.indexOf(".")) {
-      this.highPrice = Number.parseFloat(this.rangeForm.controls.highValue.value.replace(",", "."));
+    if (this.rangeForm.controls.highValue.value.indexOf(",") > 0 ||this.rangeForm.controls.highValue.value.indexOf(".")>0) {
+      this._highPrice = Number.parseFloat(this.rangeForm.controls.highValue.value.replace(",", "."));
     } else {
-      this.highPrice = Number.parseInt(this.rangeForm.controls.highValue.value);
+      this._highPrice = Number.parseInt(this.rangeForm.controls.highValue.value);
     }
-    this._highValue = this.highPrice;
+    this._highValueNumber = this._highPrice;
   }
 
   onChangeLow() {
@@ -137,52 +127,17 @@ export class GiftsComponent implements OnInit {
       return 0;
     }
     if (!this.rangeForm.controls.value.value){
-      this.lowPrice=0.0;
-      this._value=this.lowPrice
+      this._lowPrice=0.0;
+      this._valueNumber=this._lowPrice;
       return
     }
-    if (this.rangeForm.controls.value.value.indexOf(",") > 0 ||this.rangeForm.controls.value.value.indexOf(".")) {
-      this.lowPrice = Number.parseFloat(this.rangeForm.controls.value.value.replace(",", "."));
+    if (this.rangeForm.controls.value.value.indexOf(",") > 0 ||this.rangeForm.controls.value.value.indexOf(".")>0) {
+      this._lowPrice = Number.parseFloat(this.rangeForm.controls.value.value.replace(",", "."));
     } else {
-      this.lowPrice = Number.parseInt(this.rangeForm.controls.value.value);
+      this._lowPrice = Number.parseInt(this.rangeForm.controls.value.value);
     }
-    this._value=this.lowPrice
+    this._valueNumber=this._lowPrice
   }
-
-  // set highPrice(value: number) {
-  //   this.rangeForm.get('highValue').setValue(value);
-  // }
-  //
-  // set highValue(value: string) {
-  //   this.rangeForm.get('highValue').setValue(value);
-  // }
-  //
-  // get highValue() {
-  //   return this.rangeForm.get('highValue').value;
-  // }
-  //
-  // set lowPrice(value: number) {
-  //   this.rangeForm.get('highValue').setValue(value);
-  // }
-  //
-  // get lowPrice(): number {
-  //   if (!this.rangeForm.get('value').valid) {
-  //     return;
-  //   }
-  //   if (this.value.indexOf(",") > 0 || this.value.indexOf(".")) {
-  //     return Number.parseFloat(this.rangeForm.get('value').value.replace(",", "."));
-  //   } else {
-  //     return Number.parseInt(this.rangeForm.get('value').value);
-  //   }
-  // }
-  //
-  // set value(value: string) {
-  //   this.rangeForm.get('value').setValue(value);
-  // }
-  //
-  // get value() {
-  //   return this.rangeForm.get('value').value;
-  // }
 
   add(event: MatChipInputEvent): void {
     if (!this.matAutocomplete.isOpen) {
@@ -213,7 +168,7 @@ export class GiftsComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     let tags1 = this.allTags.find(tag => tag.name === event.option.viewValue);
-    let find = this.tags.find(tag => tag === tags1);
+    let find = this.tags.find(tag => tag.name.trim() === tags1.name.trim());
     if (find) {
       this.tagInput.nativeElement.value = '';
       this.tagsControl.setValue(null);
@@ -267,13 +222,13 @@ export class GiftsComponent implements OnInit {
       this.err = "Problem with price range";
       return
     }
-    if (this._value > this._highValue) {
+    if (this._valueNumber > this._highValueNumber) {
       this.err = "Max value must be less than min value";
       return
     }
     this.paginator.firstPage();
     if (this.isMyGift) {
-      this.giftService.getGifts(this.tagToString(), this.user.username, this._value, this._highValue, this.sort).subscribe(
+      this.giftService.getGifts(this.tagToString(), this.user.username, this._valueNumber, this._highValueNumber, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(0, 30);
           this.allLenght = resp.length
@@ -281,7 +236,7 @@ export class GiftsComponent implements OnInit {
         err => console.error(err),
       );
     } else {
-      this.giftService.getGifts(this.tagToString(), '', this._value, this._highValue, this.sort).subscribe(
+      this.giftService.getGifts(this.tagToString(), '', this._valueNumber, this._highValueNumber, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(0, 30);
           this.allLenght = resp.length
@@ -296,19 +251,19 @@ export class GiftsComponent implements OnInit {
       this.err = "Problem with price range";
       return
     }
-    if (this._value > this._highValue) {
+    if (this._valueNumber > this._highValueNumber) {
       this.err = "Max value must be less than min value";
       return
     }
     if (this.isMyGift) {
-      this.giftService.getGifts(this.tagToString(), this.user.username, this._value, this._highValue, this.sort).subscribe(
+      this.giftService.getGifts(this.tagToString(), this.user.username, this._valueNumber, this._highValueNumber, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(e.pageSize * e.pageIndex, e.pageSize * (e.pageIndex + 1))
         },
         err => console.error(err),
       );
     } else {
-      this.giftService.getGifts(this.tagToString(), '', this._value, this._highValue, this.sort).subscribe(
+      this.giftService.getGifts(this.tagToString(), '', this._valueNumber, this._highValueNumber, this.sort).subscribe(
         resp => {
           this.gifts = resp.slice(e.pageSize * e.pageIndex, e.pageSize * (e.pageIndex + 1))
         },
@@ -327,10 +282,10 @@ export class GiftsComponent implements OnInit {
     this.sort = "no";
     this.value = '0';
     this.highValue = '99999999';
-    this._value = 0.0;
-    this._highValue = 99999999.0;
-    this.lowPrice = 0.0;
-    this.highPrice=99999999.0;
+    this._valueNumber = 0.0;
+    this._highValueNumber = 99999999.0;
+    this._lowPrice = 0.0;
+    this._highPrice=99999999.0;
     this.rangeForm = this.formBuilder.group({
       value: ["0", [Validators.pattern(/^(?:0|(0[.,])[0-9]\d*|[1-9]\d{0,7}([.,]\d*)?)$/)]],
       highValue: ["99999999", [Validators.pattern(/^(?:0|(0[.,])[0-9]\d*|[1-9]\d{0,7}([.,]\d*)?)$/)]]
@@ -338,24 +293,43 @@ export class GiftsComponent implements OnInit {
   }
 
 
-  // onChangeHigh($event: Event) {
-  //   if (!this.rangeForm.get('highValue').valid) {
-  //     return;
-  //   }
-  //   if (this.highValue.indexOf(",") > 0 || this.highValue.indexOf(".")) {
-  //     this.highPrice = Number.parseFloat(this.highValue.replace(",", "."));
-  //   } else {
-  //     this.highPrice = Number.parseInt(this.highValue);
-  //   }
-  // }
-
-
   onChangeValue() {
-    this._value = this.lowPrice;
-    this._highValue = this.highPrice;
-    this.value = this.lowPrice.toString();
-    this.highValue = this.highPrice.toString();
+    this._valueNumber = this._lowPrice;
+    this._highValueNumber = this._highPrice;
+    this.value = this._lowPrice.toString();
+    this.highValue = this._highPrice.toString();
     this.rangeForm.get('highValue').setValue(this.highValue);
     this.rangeForm.get('value').setValue(this.value);
+  }
+
+  get highPrice() {
+    return this._highPrice;
+  }
+  get lowPrice() {
+    return this._lowPrice;
+  }
+
+  set lowPrice(value: number) {
+    this._lowPrice = value;
+  }
+
+  set highPrice(value: number) {
+    this._highPrice = value;
+  }
+
+  get valueNumber(): number {
+    return this._valueNumber;
+  }
+
+  set valueNumber(value: number) {
+    this._valueNumber = value;
+  }
+
+  get highValueNumber(): number {
+    return this._highValueNumber;
+  }
+
+  set highValueNumber(value: number) {
+    this._highValueNumber = value;
   }
 }

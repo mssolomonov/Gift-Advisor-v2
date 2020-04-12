@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { RegisterComponent } from './register/register.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { GiftComponent } from './gifts/gift.component';
 import {CustomMaterialModule} from "./core/material.module";
@@ -29,7 +28,6 @@ import {NgModule} from "@angular/core";
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent,
     GiftComponent,
     SuccessDialog,
     GiftsComponent,
