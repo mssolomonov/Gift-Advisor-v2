@@ -66,6 +66,6 @@ public class Tags implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, gifts);
+        return Objects.hash(id, name);
     }
 }

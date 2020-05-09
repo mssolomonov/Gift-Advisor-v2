@@ -138,11 +138,13 @@ public class Gifts implements Serializable {
         return Objects.equals(id, gifts.id) &&
                 Objects.equals(name, gifts.name) &&
                 Objects.equals(description, gifts.description) &&
-                Objects.equals(id_user, gifts.id_user) &&
+                Objects.equals(id_user.getId(), gifts.id_user.getId()) &&
+                Objects.equals(id_user.getUsername(), gifts.id_user.getUsername()) &&
+                Objects.equals(id_user.getPassword(), gifts.id_user.getPassword()) &&
                 Objects.equals(image_url, gifts.image_url) &&
                 Objects.equals(popularity, gifts.popularity) &&
-                Objects.equals(tags, gifts.tags) &&
-                Objects.equals(price, gifts.price);
+                Objects.equals(price, gifts.price)  &&
+                tags.stream().allMatch(tag -> tag.getId().equals(gifts.getId())&& tag.getId().equals(gifts.getId()));
     }
 
     @Override

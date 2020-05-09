@@ -89,6 +89,6 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, gifts);
+        return Objects.hash(id, username, password);
     }
 }
