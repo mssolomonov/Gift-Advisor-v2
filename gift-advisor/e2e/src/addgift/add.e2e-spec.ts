@@ -56,8 +56,8 @@ describe('Add page e2e', () => {
     searchPage.getLogoutButton().click();
   });
 
-  it('should login and can not delete gift of another user', async () => {
-    await page.navigateTo();
+  it('should login and can not delete gift of another user',  () => {
+    page.navigateTo();
 
     page.getUsernameInput().sendKeys("shemya123");
     page.getPasswordInput().sendKeys("12345678");
@@ -67,23 +67,26 @@ describe('Add page e2e', () => {
     searchPage.geAddNewGiftButton().click();
 
     addPage.getNameInput().sendKeys("name");
-    await addPage.getPriceInput().clear().then();
+    addPage.getPriceInput().clear().then();
     addPage.getPriceInput().sendKeys("1.01");
     addPage.getDescriptionInput().sendKeys("13231kljljfsdf");
     addPage.getChipList().sendKeys("cup");
     addPage.getMatOption().click();
 
     addPage.geSubmitButton().click();
+    addPage.getReturnButton().click();
 
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
+
+    searchPage.getMenuButton().click();
+    searchPage.getLoginButton().click();
 
     page.getUsernameInput().sendKeys("solomonka");
     page.getPasswordInput().sendKeys("87654321");
     page.getLoginButton().click();
 
-    await searchPage.navigateTo();
-    await searchPage.getListElements().then(function(gifts) {
+    searchPage.getListElements().then(function(gifts) {
         let matline = gifts[gifts.length-1].all(by.className("mat-line"));
         let name = matline.get(0).getText();
         let desc = matline.get(1).getText();
@@ -99,15 +102,23 @@ describe('Add page e2e', () => {
     expect(addPage.getPriceInput().getAttribute('value')).toContain("1.01");
     expect(addPage.getMatChip().count()).toEqual(1);
     expect(addPage.getMatChip().get(0).getText()).toContain("cup");
-    expect(!addPage.getDeleteButton().isPresent());
+    expect(addPage.getDeleteButton().isPresent()).toBeFalsy();
+    addPage.getReturnButton().click();
 
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
+
+    searchPage.getMenuButton().click();
+    searchPage.getLoginButton().click();
 
     page.getUsernameInput().sendKeys("shemya123");
     page.getPasswordInput().sendKeys("12345678");
     page.getLoginButton().click();
 
+    searchPage.getListElements().then(function(gifts) {
+      let matline = gifts[gifts.length-1].all(by.className("mat-line"));
+      matline.get(0).click();
+    });
     addPage.getDeleteButton().click();
     element(by.buttonText("Yes")).click();
 

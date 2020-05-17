@@ -38,4 +38,8 @@ export class AddPage {
     return element(by.buttonText("Delete"))
   }
 
+  getReturnButton() {
+    return element(by.buttonText("Return"))
+  }
+
 }

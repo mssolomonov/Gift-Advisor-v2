@@ -17,6 +17,10 @@ export class SearchPage {
     return element(by.buttonText("Menu"))
   }
 
+  getLoginButton() {
+    return element(by.buttonText("Login"))
+  }
+
   getListElements(){
     return element.all(by.className("mat-list-item"))
   }
