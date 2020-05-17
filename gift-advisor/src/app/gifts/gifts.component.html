@@ -107,7 +107,7 @@
     <div class="flex-grow align-start full-height " *ngIf="pageEvent || gifts.length>0">
       <mat-nav-list>
         <mat-list-item class="list" routerLink="/gift" [queryParams]="{ id: gift.id }" *ngFor="let gift of gifts">
-          <a matLine>
+          <a mat-line>
             <h3 class="link-caption">{{ gift.name }}</h3>
           </a>
           <h5 mat-line>  {{gift.description}}</h5>

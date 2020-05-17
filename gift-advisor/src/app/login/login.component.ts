@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value)
       .subscribe(
         data => {
-          this.router.navigate([this.returnUrl],{ queryParams: { id: 0 }});
+          this.router.navigate([this.returnUrl]);
         },
         error => {
           this.errMsg = "Could not login because of  wrong credentials";
