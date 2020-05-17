@@ -75,6 +75,7 @@ describe('Add page e2e', () => {
 
     addPage.geSubmitButton().click();
 
+    await searchPage.navigateTo();
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
 
@@ -82,7 +83,6 @@ describe('Add page e2e', () => {
     page.getPasswordInput().sendKeys("87654321");
     page.getLoginButton().click();
 
-    await searchPage.navigateTo();
     await searchPage.getListElements().then(function(gifts) {
         let matline = gifts[gifts.length-1].all(by.className("mat-line"));
         let name = matline.get(0).getText();
@@ -99,11 +99,14 @@ describe('Add page e2e', () => {
     expect(addPage.getPriceInput().getAttribute('value')).toContain("1.01");
     expect(addPage.getMatChip().count()).toEqual(1);
     expect(addPage.getMatChip().get(0).getText()).toContain("cup");
+    // TODO: Check condition
     expect(!addPage.getDeleteButton().isPresent());
 
+    await searchPage.navigateTo();
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
 
+    await page.navigateTo();
     page.getUsernameInput().sendKeys("shemya123");
     page.getPasswordInput().sendKeys("12345678");
     page.getLoginButton().click();
@@ -113,7 +116,6 @@ describe('Add page e2e', () => {
 
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
-
   });
 
 });
