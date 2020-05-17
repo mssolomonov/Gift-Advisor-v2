@@ -34,8 +34,20 @@ export class AddPage {
     return element(by.buttonText("Add"))
   }
 
+  getUpdateButton() {
+    return element(by.buttonText("Update"))
+  }
+
+  getResetButton() {
+    return element(by.buttonText("Reset"))
+  }
+
   getDeleteButton() {
     return element(by.buttonText("Delete"))
+  }
+
+  getReturnButton() {
+    return element(by.buttonText("Return"))
   }
 
 }
