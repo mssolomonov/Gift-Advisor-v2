@@ -56,7 +56,7 @@ describe('Add page e2e', () => {
     searchPage.getLogoutButton().click();
   });
 
-  it('should login and can not delete gift of another user', async () => {
+  it('should login and can not delete gift of another user',  async () => {
     await page.navigateTo();
 
     page.getUsernameInput().sendKeys("shemya123");
@@ -79,7 +79,10 @@ describe('Add page e2e', () => {
     searchPage.getMenuButton().click();
     searchPage.getLogoutButton().click();
 
-    await page.navigateTo();
+    await searchPage.navigateTo();
+    searchPage.getMenuButton().click();
+    searchPage.getLoginButton().click();
+
     page.getUsernameInput().sendKeys("solomonka");
     page.getPasswordInput().sendKeys("87654321");
     page.getLoginButton().click();
@@ -102,7 +105,7 @@ describe('Add page e2e', () => {
     expect(addPage.getMatChip().count()).toEqual(1);
     expect(addPage.getMatChip().get(0).getText()).toContain("cup");
     // TODO: Check condition
-    expect(!addPage.getDeleteButton().isPresent());
+    expect(addPage.getDeleteButton().isPresent()).toBeFalsy();
 
     await searchPage.navigateTo();
     searchPage.getMenuButton().click();
