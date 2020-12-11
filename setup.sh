@@ -23,7 +23,7 @@ echo "Postgres is ready"
 
 helm install gift-advisor helm/gift-advisor
 while [ "$(kubectl get pods -l=app='gift-advisor-backend' -o jsonpath='{.items[*].status.phase}')" != "Running" ] &
-[ "$(kubectl get pods -l=app='gift-advisor-frontend' -o jsonpath='{.items[*].status.status.phase}')" != "Running" ]; do
+[ "$(kubectl get pods -l=app='gift-advisor-frontend' -o jsonpath='{.items[*].status.phase}')" != "Running" ]; do
    sleep 10
    echo "Waiting for gift advisor to be ready."
 done

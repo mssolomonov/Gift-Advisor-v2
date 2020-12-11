@@ -2,12 +2,12 @@ frontend:
   port: 80
   image:
     registry: anashem
-    name: gift-advisor-backend
+    name: gift-advisor-frontend
     tag: latest
 
 backend:
   port: 8080
   image:
     registry: anashem
-    name: gift-advisor-frontend
+    name: gift-advisor-backend
     tag: latest
