@@ -134,7 +134,7 @@ export class GiftComponent implements OnInit {
             message: '',
           });
           if (this.image) {
-            this.decodeImage = this.defaultDecodeImage = "http://localhost:8080/" + this.image;
+            this.decodeImage = this.defaultDecodeImage = "http://10.0.2.15:30163/" + this.image;
           } else {
             this.decodeImage = this.defaultDecodeImage = '';
           }

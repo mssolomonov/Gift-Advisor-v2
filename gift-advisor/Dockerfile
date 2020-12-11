@@ -1,12 +1,10 @@
 # Stage 1
-FROM node:10-alpine as builder
-RUN mkdir -p /app
-WORKDIR /app
-COPY . .
+FROM node:12.7-alpine AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
 RUN npm install
-RUN npm run build --prod
-CMD ["npm", "start"]
+COPY . .
+RUN npm run build
 
 FROM nginx:1.17.1-alpine
-COPY default.conf /etc/nginx/nginx.conf
-COPY --from=builder /app/dist/gift-advisor /usr/share/nginx/html
+COPY --from=build  /usr/src/app/dist/gift-advisor /usr/share/nginx/html

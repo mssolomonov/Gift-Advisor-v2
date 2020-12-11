@@ -23,7 +23,7 @@ describe('TagsService', () => {
       expect(data).toBe( [ ({ id: 1, name: 'tag',})]);
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/tags');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/tags');
     expect(req.request.method).toBe('GET');
   });
 });

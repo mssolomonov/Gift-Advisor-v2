@@ -24,7 +24,7 @@ describe('AuthentificationService', () => {
       expect(data).toBe( new User(1, "username", "password"));
     });
 
-    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://localhost:8080/user/log');
+    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://10.0.2.15:30163/user/log');
     expect(req.request.body).toEqual({username: "username", password: "password"});
     expect(service.currentUser).toBeTruthy();
     // expect(localStorage.getItem("currentUser")).toBeTruthy()
@@ -35,7 +35,7 @@ describe('AuthentificationService', () => {
       expect(data).toBe(null);
     });
 
-    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://localhost:8080/user/log');
+    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://10.0.2.15:30163/user/log');
     expect(req.request.body).toEqual({username: "username", password: "password"});
     expect(service.currentUserValue).toBeFalsy();
     expect(localStorage.getItem("currentUser")).toBeFalsy()

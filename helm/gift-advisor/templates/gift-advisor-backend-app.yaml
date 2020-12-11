@@ -32,8 +32,9 @@ spec:
       containers:
         - name: gift-advisor-backend
           image: {{ .Values.backend.image.registry }}/{{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}
+          imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.backend.port }}
           env:   # Setting Enviornmental Variables
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom:

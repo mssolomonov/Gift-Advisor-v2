@@ -10,28 +10,28 @@ export class GiftsService {
   constructor(private http: HttpClient) { }
 
   get(id: number){
-    return this.http.get<Gift>(`http://localhost:8080/gift/${id}`);
+    return this.http.get<Gift>(`http://10.0.2.15:30163/gift/${id}`);
   }
 
   add(gift: Gift){
-    return this.http.post(`http://localhost:8080/gift/add`, gift);
+    return this.http.post(`http://10.0.2.15:30163/gift/add`, gift);
   }
 
   update(gift: Gift){
-    return this.http.put(`http://localhost:8080/gift/update`, gift);
+    return this.http.put(`http://10.0.2.15:30163/gift/update`, gift);
   }
 
   delete(id: number){
-    return this.http.delete(`http://localhost:8080/gift/${id}`);
+    return this.http.delete(`http://10.0.2.15:30163/gift/${id}`);
   }
 
   getUserGift(username: string) {
-    return this.http.get<Gift[]>(`http://localhost:8080/gifts/${username}`);
+    return this.http.get<Gift[]>(`http://10.0.2.15:30163/gifts/${username}`);
   }
 
   getGifts(tags: string[], username: string, from, to: number, sort: string){
 
-    return this.http.get<Gift[]>(`http://localhost:8080/gift/search`, {
+    return this.http.get<Gift[]>(`http://10.0.2.15:30163/gift/search`, {
       params: {
         'tags': tags,
         'username': username,
@@ -42,6 +42,6 @@ export class GiftsService {
   }
 
   getAll() {
-    return this.http.get(`http://localhost:8080/gifts`);
+    return this.http.get(`http://10.0.2.15:30163/gifts`);
   }
 }

@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   register(user: User){
-    return this.http.post(`http://localhost:8080/users/reg`, user);
+    return this.http.post(`http://10.0.2.15:30163/users/reg`, user);
   }
 
 }

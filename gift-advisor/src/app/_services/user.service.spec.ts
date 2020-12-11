@@ -25,7 +25,7 @@ describe('UserService', () => {
       expect(data).toBe( [ ({ id: 1, username: 'username', password: 'password' })]);
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/users/reg');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/users/reg');
     expect(req.request.method).toBe('POST');
 
   });

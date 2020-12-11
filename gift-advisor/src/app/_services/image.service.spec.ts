@@ -24,7 +24,7 @@ describe('ImageService', () => {
       expect(data).toBe( "success");
     });
 
-    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://localhost:8080/image');
+    const req = httpMock.expectOne(req => req.method ==='POST' && req.url ==='http://10.0.2.15:30163/image');
     expect(req.request.method).toBe('POST');
     expect(req.request.params.has('id')).toBeTruthy();
   });

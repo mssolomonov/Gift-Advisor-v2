@@ -26,7 +26,7 @@ describe('GiftsService', () => {
         "image_url",  [], 1));
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gift/1');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gift/1');
     expect(req.request.method).toBe('GET');
 
   });
@@ -37,7 +37,7 @@ describe('GiftsService', () => {
       expect(data).toBe("success");
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gift/add');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gift/add');
     expect(req.request.method).toBe('POST');
     req.flush("success")
   });
@@ -48,7 +48,7 @@ describe('GiftsService', () => {
       expect(data).toBe("success");
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gift/update');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gift/update');
     expect(req.request.method).toBe('PUT');
     req.flush("success")
   });
@@ -57,7 +57,7 @@ describe('GiftsService', () => {
       expect(data).toBe("success");
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gift/1');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gift/1');
     expect(req.request.method).toBe('DELETE');
     req.flush("success")
 
@@ -69,7 +69,7 @@ describe('GiftsService', () => {
         image_url: "image_url", tags: [], price: 1, count: 1}]);
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gifts/username');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gifts/username');
     expect(req.request.method).toBe('GET');
 
   });
@@ -80,7 +80,7 @@ describe('GiftsService', () => {
         image_url: "image_url", tags: [], price: 1, count: 1}]);
     });
 
-    const req = httpMock.expectOne(req => req.method ==='GET' && req.url ==='http://localhost:8080/gift/search');
+    const req = httpMock.expectOne(req => req.method ==='GET' && req.url ==='http://10.0.2.15:30163/gift/search');
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get("from")).toBe('0');
     expect(req.request.params.get("to")).toBe('1');
@@ -94,7 +94,7 @@ describe('GiftsService', () => {
         image_url: "image_url", tags: [], price: 1, count: 1}]);
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/gifts');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/gifts');
     expect(req.request.method).toBe('GET');
   });
 

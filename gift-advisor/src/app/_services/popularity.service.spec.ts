@@ -24,7 +24,7 @@ describe('PopularityService', () => {
       expect(data).toBe( "success");
     });
 
-    const req = httpMock.expectOne('http://localhost:8080/popularity/1');
+    const req = httpMock.expectOne('http://10.0.2.15:30163/popularity/1');
     expect(req.request.method).toBe('POST');
     req.flush("success")
   });

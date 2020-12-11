@@ -28,8 +28,10 @@ spec:
     metadata:
       labels:
         app: gift-advisor-frontend
+    spec:
       containers:
-        - name: gift-advisor-frontend
-          image: {{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}
-          ports:
-            - containerPort: {{ .Values.frontend.port }}
+      - name: gift-advisor-frontend
+        imagePullPolicy: Always
+        image: {{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
