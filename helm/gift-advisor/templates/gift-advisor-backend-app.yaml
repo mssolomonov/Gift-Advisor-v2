@@ -1,0 +1,57 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gift-advisor-backend
+  labels:
+    name: gift-advisor-backend
+spec:
+  ports:
+    - nodePort: 30163
+      port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.port }}
+      protocol: TCP
+  selector:
+    app: gift-advisor-backend
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gift-advisor-backend
+spec:
+  selector:
+    matchLabels:
+      app: gift-advisor-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gift-advisor-backend
+    spec:
+      containers:
+        - name: gift-advisor-backend
+          image: {{ .Values.backend.image.registry }}/{{ .Values.backend.image.name }}:{{ .Values.backend.image.tag }}
+          ports:
+            - containerPort: 8080
+          env:   # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-conf  # name of configMap
+                  key: host
+            - name: DB_NAME  # Setting Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-conf
+                  key: name
+            - name: POSTGRES_USER  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials # Secret Name
+                  key: postgres_user
+            - name: POSTGRES_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: postgres_password

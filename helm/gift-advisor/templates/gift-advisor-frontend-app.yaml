@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: gift-advisor-frontend
+  name: gift-advisor-frontend
+spec:
+  type: NodePort
+  ports:
+     - nodePort: 30170
+       port: {{ .Values.frontend.port }}
+       protocol: TCP
+       targetPort: {{ .Values.frontend.port }}
+  selector:
+    app: gift-advisor-frontend
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gift-advisor-frontend
+spec:
+  selector:
+    matchLabels:
+      app: gift-advisor-frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gift-advisor-frontend
+      containers:
+        - name: gift-advisor-frontend
+          image: {{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.tag }}
+          ports:
+            - containerPort: {{ .Values.frontend.port }}

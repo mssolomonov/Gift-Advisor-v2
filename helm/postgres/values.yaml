@@ -1,0 +1,6 @@
+postgres:
+  image:
+    registry: anashem
+    name: gift-advisor-postgres
+    tag: latest
+  port: 5432
