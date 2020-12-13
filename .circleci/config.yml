@@ -7,30 +7,71 @@ orbs:
   gradle: circleci/gradle@2.2.0
 # Orchestrate or schedule a set of jobs
 jobs:
-  compile-java:
-    steps:
-      - gradle/test:
-          store-artifacts: build/artifact
-          test-results: build/test_results
-  build-and-push:
+  build-and-push-java:
     executor: docker/docker
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
-          image: my_repo/orb-test
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/spring_app
       - docker/push:
-          digest-path: /tmp/digest.txt
-          image: my_repo/orb-test
+          digest-path: /tmp/digest_spring.txt
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/spring_app
       - run:
           command: |
-            echo "Digest is: $(</tmp/digest.txt)"
+            echo "Digest is: $(</tmp/digest_spring.txt)"
+
+  build-and-push-angular:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/frontend_app
+          docker-context: gift-advisor/
+      - docker/push:
+          digest-path: /tmp/digest_angular.txt
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/frontend_app
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest_angular.txt)"
+
+  build-and-push-bd:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/postgres_app
+      - docker/push:
+          digest-path: /tmp/digest_bd.txt
+          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/postgres_app
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest_bd.txt)"
+
 
 workflows:
   build-docker-image:
     jobs:
-      - build-and-push
-  build_and_test_java:
-    jobs:
-      - compile_java
+      - gradle/test:
+          test_results_path: build/reports
+          executor:
+            name: gradle/default
+            tag: '11.0'
+      - gradle/run:
+          executor:
+            name: gradle/default
+            tag: '11.0'
+      - build-and-push-java:
+          requires: 
+            - gradle/run
+      - build-and-push-angular:
+          requires: 
+            - gradle/run
+      - build-and-push-bd:
+          requires: 
+            - gradle/run
