@@ -25,6 +25,8 @@ The following guides illustrate how to use some features concretely:
 * [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
 * [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
+
+
 ### Additional Links
 These additional references should also help you:
 
