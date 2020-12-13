@@ -28,10 +28,10 @@ jobs:
           at: .
       - docker/check
       - docker/build:
-          image: $DOCKER_LOGIN/gift_advisor_v2_spring_app
+          image: $DOCKER_LOGIN/gift-advisor-backend
       - docker/push:
           digest-path: /tmp/digest_spring.txt
-          image: $DOCKER_LOGIN/gift_advisor_v2_spring_app
+          image: $DOCKER_LOGIN/gift-advisor-backend
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_spring.txt)"
@@ -44,12 +44,12 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: $DOCKER_LOGIN/gift_advisor_v2_frontend_app
+          image: $DOCKER_LOGIN/gift-advisor-frontend
           path: gift-advisor
           docker-context: gift-advisor
       - docker/push:
           digest-path: /tmp/digest_angular.txt
-          image: $DOCKER_LOGIN/gift_advisor_v2_frontend_app
+          image: $DOCKER_LOGIN/gift-advisor-frontend
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_angular.txt)"
@@ -62,12 +62,12 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: $DOCKER_LOGIN/gift_advisor_v2_postgres_app
+          image: $DOCKER_LOGIN/gift-advisor-postgres
           path: postgres
           docker-context: postgres
       - docker/push:
           digest-path: /tmp/digest_bd.txt
-          image: $DOCKER_LOGIN/gift_advisor_v2_postgres_app
+          image: $DOCKER_LOGIN/gift-advisor-postgres
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_bd.txt)"
