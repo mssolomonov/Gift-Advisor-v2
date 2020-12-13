@@ -12,7 +12,6 @@ jobs:
       - gradle/test:
           store-artifacts: build/artifact
           test-results: build/test_results
-        
   build-and-push:
     executor: docker/docker
     steps:
