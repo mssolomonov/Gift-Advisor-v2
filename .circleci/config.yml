@@ -7,48 +7,67 @@ orbs:
   gradle: circleci/gradle@2.2.0
 # Orchestrate or schedule a set of jobs
 jobs:
+  compile-java:
+    executor:
+      name: gradle/default
+      tag: '11.0'
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
   build-and-push-java:
     executor: docker/docker
     steps:
       - setup_remote_docker
-      - checkout
+      - attach_workspace:
+          at: .
       - docker/check
       - docker/build:
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/spring_app
+          image: $DOCKER_LOGIN/gift_advisor_v2_spring_app
       - docker/push:
           digest-path: /tmp/digest_spring.txt
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/spring_app
+          image: $DOCKER_LOGIN/gift_advisor_v2_spring_app
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_spring.txt)"
 
   build-and-push-angular:
     executor: docker/docker
+    working_directory: ~/gift-advisor
     steps:
       - setup_remote_docker
       - checkout
       - docker/check
       - docker/build:
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/frontend_app
-          docker-context: gift-advisor/
+          image: $DOCKER_LOGIN/gift_advisor_v2_frontend_app
+          path: gift-advisor
+          docker-context: gift-advisor
       - docker/push:
           digest-path: /tmp/digest_angular.txt
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/frontend_app
+          image: $DOCKER_LOGIN/gift_advisor_v2_frontend_app
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_angular.txt)"
 
   build-and-push-bd:
     executor: docker/docker
+    working_directory: ~/postgres
     steps:
-      - setup_remote_docker
+      - setup_remote_docker 
       - checkout
       - docker/check
       - docker/build:
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/postgres_app
+          image: $DOCKER_LOGIN/gift_advisor_v2_postgres_app
+          path: postgres
+          docker-context: postgres
       - docker/push:
           digest-path: /tmp/digest_bd.txt
-          image: $CIRCLE_PROJECT_USERNAME/gift_advisor_v2/postgres_app
+          image: $DOCKER_LOGIN/gift_advisor_v2_postgres_app
       - run:
           command: |
             echo "Digest is: $(</tmp/digest_bd.txt)"
@@ -57,21 +76,14 @@ jobs:
 workflows:
   build-docker-image:
     jobs:
+      - compile-java
       - gradle/test:
           test_results_path: build/reports
           executor:
             name: gradle/default
             tag: '11.0'
-      - gradle/run:
-          executor:
-            name: gradle/default
-            tag: '11.0'
       - build-and-push-java:
           requires: 
-            - gradle/run
-      - build-and-push-angular:
-          requires: 
-            - gradle/run
-      - build-and-push-bd:
-          requires: 
-            - gradle/run
+            - compile-java
+      - build-and-push-angular
+      - build-and-push-bd
